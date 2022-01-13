@@ -29,6 +29,7 @@ type TestRunGroup struct {
 	ClientDelayNS    int64         `json:"client_delay_ns"`
 	ServerDelayNS    int64         `json:"server_delay_ns"`
 	RemoteAddr       string        `json:"remote_addr,omitempty"`
+	UpstreamEndpoint string        `json:"upstream_endpoint,omitempty"`
 	Runs             chan *TestRun `json:"-"`
 	Results          chan *TestRun `json:"-"`
 	ClientReportFile string        `json:"-"`
@@ -36,15 +37,19 @@ type TestRunGroup struct {
 }
 
 type TestRun struct {
-	RunID       string    `json:"run_id,omitempty"`
-	RunGroupID  string    `json:"run_group_id,omitempty"`
-	RemoteAddr  string    `json:"remote_addr,omitempty"`
-	RunCount    int       `json:"run_count,omitempty"`
-	Time        time.Time `json:"time,omitempty"`
-	Data        []byte    `json:"data,omitempty"`
-	ClientStart time.Time `json:"client_start,omitempty"`
-	ClientEnd   time.Time `json:"client_end,omitempty"`
-	Error       string    `json:"error,omitempty"`
+	RunID                  string    `json:"run_id,omitempty"`
+	RunGroupID             string    `json:"run_group_id,omitempty"`
+	RemoteAddr             string    `json:"remote_addr,omitempty"`
+	RunCount               int       `json:"run_count,omitempty"`
+	Time                   time.Time `json:"time,omitempty"`
+	Data                   []byte    `json:"data,omitempty"`
+	ClientStart            time.Time `json:"client_start,omitempty"`
+	ClientEnd              time.Time `json:"client_end,omitempty"`
+	ServerStart            time.Time `json:"server_start,omitempty"`
+	ServerEnd              time.Time `json:"server_end,omitempty"`
+	UpstreamResponseCode   int       `json:"upstream_response_code,omitempty"`
+	UpstreamResponseTimeNS int64     `json:"upstream_response_time_ns,omitempty"`
+	Error                  string    `json:"error,omitempty"`
 }
 
 type TestRunResult struct {
@@ -55,6 +60,7 @@ type TestRunResult struct {
 	ClientTime     time.Time     `json:"client_time"`
 	ServerTime     time.Time     `json:"server_time"`
 	ClientDuration time.Duration `json:"client_duration_ns"`
+	ServerDuration time.Duration `json:"server_duration_ns"`
 	//ClientServerTimeDiff time.Duration `json:"client_server_time_diff"`
 	Error string `json:"error,omitempty"`
 }
