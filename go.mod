@@ -1,4 +1,4 @@
-module github.com/robertletak/conntest
+module github.com/umg/conntest
 
 go 1.17
 
