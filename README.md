@@ -9,6 +9,7 @@ A single-binary cross-platform lightweight client/server connection testing tool
 - `run_count`: The number of times to run the test
 - `client_delay_ns`: Optional client-side delay to introduce, in nanoseconds
 - `server_delay_ns`: Optional server-side delay to introduce, in nanoseconds
+- `upstream_endpoint`: Optional endpoint upstream to server, which server will `GET` on each client request
 - `data`: Optional data to send to the server. Default is `uuid`.
 
 ## Usage
@@ -34,6 +35,7 @@ RESP=`curl $CONNTEST/test-groups/create -d '{
 	"run_count": 1000
 	"concurrency": 5,
 	"client_delay_ns": 100,
+	"upstream_endpoint": "https://internal.example.net",
 	"server_delay_ns": 0
 }'`
 # export the run_group_id from the response JSON

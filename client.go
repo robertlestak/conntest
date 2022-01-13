@@ -212,6 +212,7 @@ func (r *TestResults) diff() error {
 		res.RunID = sr.RunID
 		res.ServerTime = sr.Time
 		res.ClientDuration = time.Duration(tr.ClientEnd.Sub(tr.ClientStart).Nanoseconds())
+		res.ServerDuration = time.Duration(sr.ServerEnd.Sub(sr.ServerStart).Nanoseconds())
 		//res.ClientServerTimeDiff = sr.Time.Sub(tr.Time)
 		if string(tr.Data) != string(sr.Data) {
 			res.Error = "data mismatch"
