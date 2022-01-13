@@ -79,6 +79,26 @@ func handleGetTestRunGroup(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 }
 
+func makeUpstreamReq(ue string) (*http.Response, error) {
+	l := log.WithFields(log.Fields{
+		"action": "makeUpstreamReq",
+		"url":    ue,
+	})
+	l.Info("start")
+	req, err := http.NewRequest("GET", ue, nil)
+	if err != nil {
+		l.Error(err)
+		return nil, err
+	}
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		l.Error(err)
+		return nil, err
+	}
+	return resp, nil
+}
+
 func handleTestRun(w http.ResponseWriter, r *http.Request) {
 	l := log.WithFields(log.Fields{
 		"action": "handleTestRun",
@@ -102,15 +122,29 @@ func handleTestRun(w http.ResponseWriter, r *http.Request) {
 			l.Info("run group found")
 			nrid := uuid.New().String()
 			tr := &TestRun{
-				RunID:    nrid,
-				RunCount: count,
-				Time:     time.Now(),
-				Data:     bd,
+				RunID:       nrid,
+				ServerStart: time.Now(),
+				RunCount:    count,
+				Time:        time.Now(),
+				Data:        bd,
+			}
+			if t.UpstreamEndpoint != "" {
+				l.Info("upstream endpoint found")
+				resp, err := makeUpstreamReq(t.UpstreamEndpoint)
+				if err != nil {
+					l.Error(err)
+					tr.UpstreamResponseCode = 0
+				} else {
+					l.WithField("code", resp.StatusCode).Info("upstream response")
+					tr.UpstreamResponseCode = resp.StatusCode
+				}
+				tr.UpstreamResponseTimeNS = time.Since(tr.ServerStart).Nanoseconds()
 			}
 			l = l.WithFields(log.Fields{
 				"runID": nrid,
 			})
 			l.Info("adding run")
+			tr.ServerEnd = time.Now()
 			t.TestRuns = append(t.TestRuns, tr)
 			time.Sleep(time.Duration(t.ServerDelayNS) * time.Nanosecond)
 			w.WriteHeader(http.StatusOK)
