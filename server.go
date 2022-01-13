@@ -134,6 +134,7 @@ func handleTestRun(w http.ResponseWriter, r *http.Request) {
 				if err != nil {
 					l.Error(err)
 					tr.UpstreamResponseCode = 0
+					tr.Error = err.Error()
 				} else {
 					l.WithField("code", resp.StatusCode).Info("upstream response")
 					tr.UpstreamResponseCode = resp.StatusCode
