@@ -32,7 +32,7 @@ export CONNTEST=http://conntest-server:8080
 # create a new test group, storing the response in a variable
 RESP=`curl $CONNTEST/test-groups/create -d '{
 	"description": "example test group",
-	"run_count": 1000
+	"run_count": 1000,
 	"concurrency": 5,
 	"client_delay_ns": 100,
 	"upstream_endpoint": "https://internal.example.net",
