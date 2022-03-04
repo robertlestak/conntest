@@ -79,10 +79,11 @@ func handleGetTestRunGroup(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusNotFound)
 }
 
-func makeUpstreamReq(ue string) (*http.Response, error) {
+func makeUpstreamReq(ue string, timeout time.Duration) (*http.Response, error) {
 	l := log.WithFields(log.Fields{
-		"action": "makeUpstreamReq",
-		"url":    ue,
+		"action":  "makeUpstreamReq",
+		"url":     ue,
+		"timeout": timeout,
 	})
 	l.Info("start")
 	req, err := http.NewRequest("GET", ue, nil)
@@ -91,6 +92,9 @@ func makeUpstreamReq(ue string) (*http.Response, error) {
 		return nil, err
 	}
 	client := &http.Client{}
+	if timeout > 0 {
+		client.Timeout = timeout
+	}
 	resp, err := client.Do(req)
 	if err != nil {
 		l.Error(err)
@@ -130,7 +134,7 @@ func handleTestRun(w http.ResponseWriter, r *http.Request) {
 			}
 			if t.UpstreamEndpoint != "" {
 				l.Info("upstream endpoint found")
-				resp, err := makeUpstreamReq(t.UpstreamEndpoint)
+				resp, err := makeUpstreamReq(t.UpstreamEndpoint, t.UpstreamTimeout)
 				if err != nil {
 					l.Error(err)
 					tr.UpstreamResponseCode = 0

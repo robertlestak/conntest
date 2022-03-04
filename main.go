@@ -30,6 +30,7 @@ type TestRunGroup struct {
 	ServerDelayNS    int64         `json:"server_delay_ns"`
 	RemoteAddr       string        `json:"remote_addr,omitempty"`
 	UpstreamEndpoint string        `json:"upstream_endpoint,omitempty"`
+	UpstreamTimeout  time.Duration `json:"upstream_timeout_ns,omitempty"`
 	Runs             chan *TestRun `json:"-"`
 	Results          chan *TestRun `json:"-"`
 	ClientReportFile string        `json:"-"`

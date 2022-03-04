@@ -10,6 +10,7 @@ A single-binary cross-platform lightweight client/server connection testing tool
 - `client_delay_ns`: Optional client-side delay to introduce, in nanoseconds
 - `server_delay_ns`: Optional server-side delay to introduce, in nanoseconds
 - `upstream_endpoint`: Optional endpoint upstream to server, which server will `GET` on each client request
+- `upstream_timeout_ns`: Optional timeout for upstream requests, in nanoseconds. Default is infinity.
 - `data`: Optional data to send to the server. Default is `uuid`.
 
 ## Usage
